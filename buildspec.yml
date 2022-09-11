@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  variables:
+    CLUSTER: GreetCluster
+    SERVICE: ServiceNewGreet
 phases:
   pre_build:
     commands:
@@ -28,13 +32,5 @@ phases:
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo Writing image definitions file...
-      - printf '[{"name":"cicd-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - cat imagedefinitions.json
-
-
-artifacts:
-  files:
-    - '**/*'
-    - imagedefinitions.json
-  base-directory: './build/libs'
+      - echo Updating ECS service
+      - aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
