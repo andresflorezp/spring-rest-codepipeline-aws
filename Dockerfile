@@ -26,4 +26,4 @@ WORKDIR /app
 EXPOSE 8080
 USER demospring
 
-ENTRYPOINT ["/app/docker/bin/run_container"]
+ENTRYPOINT [ "java", "org.springframework.boot.loader.JarLauncher"]
